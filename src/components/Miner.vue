@@ -1,18 +1,9 @@
 <template>
     <div>
-        <!-- <li>miner #1</li>
-        <li>miner #2</li>
-        <li>miner #3</li>
-        <li>miner #4</li>
-        <li class="evil">miner #5</li>
-        <li class="evil">miner #6</li>
-        <li class="evil">miner #7</li>
-        <li class="evil">miner #8</li>
-        <li class="evil">miner #9</li>
-        <li class="evil">miner #10</li> -->
-        <button @click="start_mining" >start</button>
-        <button @click="evil" >evil</button>
-        {{ pool.length }}
+        <button @click="start" v-show="show_start">start</button>
+        <button @click="stop" v-show="!show_start">stop</button>
+        <button @click="evil" v-show="true">evil</button>
+        <span v-show="false" > {{ pool.length }} </span>
         <li v-for="(i,k) in 10" :key="k"  :class="{'evil' : (i > 4) && evil_flag }">
             #{{i}}# miner     
             <span v-if="Object.keys(cur_store).length > 0"> 
@@ -29,6 +20,8 @@ export default {
            cur_store : {} ,     
            show_process : false,
            evil_flag : 0 ,
+           runner : '' ,
+           show_start : true ,
         }
     },
     computed : {
@@ -66,11 +59,16 @@ export default {
         evil(){
             this.evil_flag = 1
         },
-        start_mining(){
-            setInterval(this.process_transaction,1500) ;
+        start(){
+            this.show_start = false 
+            this.runner     = setInterval(this.process_transaction,1500) ;
         },
-
+        stop() {
+            clearInterval(this.runner)
+            this.show_start = true 
+        },
         process_transaction() {
+            if(!this.pool.length) return 
             let t = this.pool.shift()
             for (let i = 1 ; i <= 10 ; i+=1 ){
                 if(this.evil_flag && i > 4 ){

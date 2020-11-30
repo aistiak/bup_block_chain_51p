@@ -1,16 +1,22 @@
 <template>
     <div>
+        <span v-show="false">  {{pool.length}} </span>
+        <button @click="start" v-show="show_start" >start</button>
+        <button @click="stop" v-show="!show_start" >stop</button>
         <li v-for="(i,k) in pool" :key="k">
             {{ `#${i.id} ${i.from} sent ${i.amount} to ${i.to}` }}  
         </li>
+
     </div>
+
 </template>
 <script>
 export default {
     name : 'Pool' ,
     data() {
         return {
-
+            runner : '' ,
+            show_start : true ,
         }
     },
     computed : {
@@ -32,15 +38,21 @@ export default {
         } ,       
     },
     mounted(){
-        this.startPlloing()
+        // this.startPlloing()
     },
     methods : {
-        startPlloing(){
-            setInterval(this.takeFromTransaction,1000)
+        start(){
+            this.show_start = false
+            this.runner     = setInterval(this.takeFromTransaction,1000)
+        },
+        stop(){
+            clearInterval( this.runner )
+            this.show_start = true 
         },
         takeFromTransaction(){
-            this.pool.push( this.producer.pop() )
-        }
+            if(this.producer.length)
+                this.pool.push( this.producer.pop() )
+        },
     }
 }
 </script>

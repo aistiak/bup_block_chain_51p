@@ -1,6 +1,6 @@
 <template>
     <div>
-        validator <span v-show="false"> {{ pool }}</span> 
+        <span v-show="false"> {{ pool }}</span> 
         <!-- {{ hash_list }} -->
         <li v-for="(i,k) in Object.values(hash_list)" 
             :key="k"
@@ -8,7 +8,7 @@
                // 'good' : k %2 == 0
                   'good' : Object.values( hash_list).filter( v => v.hash == i.hash).length >=5   
             }">
-            {{ ` miner ${k+1} - ${i.hash}` }}
+            {{ ` miner ${k+1} - block #${i.id} - ${i.hash}` }}
         </li>
     </div>
 </template>

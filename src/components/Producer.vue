@@ -1,5 +1,7 @@
 <template>
     <div>
+        <button @click="start" v-show="show_start">start</button>
+        <button @click="stop" v-show="!show_start">stop</button>
         <li v-for="(i,k) in producer" :key="k">
             {{ `#${i.id} ${i.from} sent ${i.amount} to ${i.to}` }}  
         </li>
@@ -11,6 +13,8 @@ export default {
     data(){
         return {
             counter : 1 ,
+            runner : '' ,
+            show_start : true ,
         }
     },
     computed : {
@@ -25,11 +29,11 @@ export default {
 
     },
     mounted(){
-        this.startProducing()
+        
     },
     methods : {
         startProducing(){
-            setInterval(this.addTransaction, 500);
+           this.runner = setInterval(this.addTransaction, 500);
         },
         addTransaction(){
             this.producer.unshift({
@@ -39,7 +43,17 @@ export default {
                 amount : Math.floor( Math.random() * 5000)
             }) 
             this.counter += 1
-        }
+        },
+
+        start() {
+            this.show_start = false 
+            this.startProducing()
+        },
+
+        stop() {
+            clearInterval(this.runner)
+            this.show_start = true 
+        },
     }
 }
 </script>
